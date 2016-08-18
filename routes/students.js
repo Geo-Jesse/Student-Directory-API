@@ -32,6 +32,7 @@ router.post('/', function (req, res, next) {
   })
 })
 
+//GET BY ID
 router.get('/:studentId', function (req, res, next) {
   Student.findById(req.params.studentId, function (err, student) {
     if (err) {
@@ -45,6 +46,25 @@ router.get('/:studentId', function (req, res, next) {
     }
   })
 })
+
+//PUT
+router.put('/:studentId', function (req, res, next) {
+  Student.findByIdAndUpdate(req.params.studentId, { $set: req.body }, function (err, student) {
+    if (err) {
+      res.status(500).send()
+    } else {
+      if (student) {
+        Student.findById(req.params.studentId, function (err, updatedStudent) {
+          res.json(updatedStudent)
+        })
+      } else {
+        res.status(404).send()
+      }
+    }
+  })
+})
+
+
 
 router.delete('/:studentId', function (req, res, next) {
   Student.findById(req.params.studentId).remove(function (err) {

@@ -19,4 +19,17 @@ router.get('/', function(req, res, next) {
   })
 });
 
+// '/' refers to "students"
+router.post('/', function (req, res, next) {
+  const student = new Student(req.body)
+  student.save(function (err) {
+    if (err) {
+      res.status(500).send()
+    } else {
+      res.json(student)
+    }
+  })
+})
+
+
 module.exports = router;

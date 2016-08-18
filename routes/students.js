@@ -8,7 +8,7 @@ router.use(function (req, res, next) {
   next()
 })
 
-
+//GET
 router.get('/', function(req, res, next) {
   Student.find({}, function(err, students) {
     if (err) {
@@ -19,6 +19,7 @@ router.get('/', function(req, res, next) {
   })
 });
 
+//POST
 // '/' refers to "students"
 router.post('/', function (req, res, next) {
   const student = new Student(req.body)
@@ -31,5 +32,18 @@ router.post('/', function (req, res, next) {
   })
 })
 
+router.get('/:studentId', function (req, res, next) {
+  Student.findById(req.params.studentId, function (err, student) {
+    if (err) {
+      res.status(500).send()
+    } else {
+      if (student) {
+        res.json(student)
+      } else {
+        res.status(404).send()
+      }
+    }
+  })
+})
 
 module.exports = router;

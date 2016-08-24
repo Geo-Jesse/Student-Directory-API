@@ -7,16 +7,21 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-
-mongoose.connect(process.env.DB_CONNECTION)
+var jwt = require('express-jwt');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var students = require('./routes/students');
 
-
 var app = express();
+const mongoose = require('mongoose');
+
+var jwtCheck = jwt({
+  secret: new Buffer(process.env.AUTH0_CLIENT_SECRET, 'base64'),
+  audience: process.env.AUTH0_CLIENT_ID
+});
+
+mongoose.connect(process.env.DB_CONNECTION)
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -30,6 +35,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/students', jwtCheck);
 app.use('/', routes);
 app.use('/users', users);
 app.use('/students', students);
